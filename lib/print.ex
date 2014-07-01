@@ -28,9 +28,8 @@ defmodule Print do
   defp print_cell(row, n) do
     state = elem(row, n)
     cond do
-      state == :dead  -> IO.write "."
-      state == :alive -> IO.write "0"
+      state == :dead  -> IO.write " "
+      state == :alive -> IO.write "█"
     end
-    IO.write " "
   end
 end
