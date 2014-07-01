@@ -5,7 +5,12 @@ defmodule Boeufvie.Mixfile do
     [app: :boeufvie,
      version: "0.0.1",
      elixir: "~> 0.14.2",
+     escript: escript,
      deps: deps]
+  end
+
+  def escript do
+    [main_module: Boeufvie]
   end
 
   # Configuration for the OTP application
