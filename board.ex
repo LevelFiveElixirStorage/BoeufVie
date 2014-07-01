@@ -4,18 +4,30 @@ defmodule Board do
     Build.create_new({}, 0, size)
   end
 
-  # Returns a list of tuples [{State, {x, y}}]
-  def each_cell(board) do
-    for x <- 0..(tuple_size(board)-1),
-        y <- 0..(tuple_size(elem(board, 0))-1) do
-          {cell(board, {x, y}), {x, y}}
-        end
+  def map(board, f) do
+    map(board, {0, 0}, f)
+  end
+
+  # When past end of rows return the board
+  defp map(board, {x, y}, f) when x >= tuple_size(board) do
+    board
+  end
+
+  # When past end of column go to next row
+  defp map(board, {x, y}, f) when y >= tuple_size(elem(board, x)) do
+    map(board, {x+1, 0}, f)
+  end
+
+  # Update the cell at this point
+  defp map(board, {x, y}, f) when x < tuple_size(board) and y < tuple_size(elem(board, x)) do
+    board = set_cell_state(board, {x, y}, f.(cell(board, {x, y}), {x, y}))
+    map(board, {x, y+1}, f)
   end
 
   # Returns a new board with every cell updated following the rules.
   def update(board) do
-    for {this_cell, {x, y}} <- each_cell(board) do
-      Rules.new_cell_state(this_cell, adj_cells(board, {x, y}))
+    map board, fn(state, {x, y}) ->
+      Rules.new_cell_state(state, adj_cells(board, {x, y}))
     end
   end
 
