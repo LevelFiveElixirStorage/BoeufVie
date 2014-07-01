@@ -41,7 +41,7 @@ defmodule Board do
 
   def set_cell_state(board, {row, col}, state) do
     cur_col = elem(board, row)
-    Tuple.delete_at(board, row)
+    board = Tuple.delete_at(board, row)
     cur_col = Tuple.delete_at(cur_col, col)
     cur_col = Tuple.insert_at(cur_col, col, state)
     board = Tuple.insert_at(board, row, cur_col)
@@ -56,5 +56,20 @@ defmodule Build do
 
   def create_new(board, size, goalSize) when size >= goalSize do
     board
+  end
+
+  def populate(board, density, liveState, curRow, curCol) when curRow >= tuple_size(board) do
+    board
+  end
+
+  def populate(board, density, liveState, curRow, curCol) when curCol >= tuple_size(elem(board, curRow)) do
+    populate(board, density, liveState, curRow+1, 0)
+  end
+
+  def populate(board, density, liveState, curRow, curCol) when curRow < tuple_size(board) and curCol < tuple_size(elem(board, curRow)) do
+    if :random.uniform > density do
+      board = Board.set_cell_state(board, {curRow, curCol}, liveState)
+    end
+    populate(board, density, liveState, curRow, curCol+1)
   end
 end

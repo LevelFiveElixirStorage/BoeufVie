@@ -21,4 +21,13 @@ defmodule Meh do
       start = start + 1
     end
   end
+
+  def shrugagedon(n) when n < 999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999 do
+    all_the_shrugs(1)
+    shrugagedon(n + 1)
+  end
+
+  def shrugagedon(n) do
+    all_the_shrugs(1)
+  end
 end
