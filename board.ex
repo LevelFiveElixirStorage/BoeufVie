@@ -40,6 +40,10 @@ defmodule Board do
     cur_col = Tuple.insert_at(cur_col, col, state)
     board = Tuple.insert_at(board, row, cur_col)
   end
+
+  def populate(board, density, liveState) do
+    Build.populate(board, density, liveState, 0, 0)
+  end
 end
 
 defmodule Build do
