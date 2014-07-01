@@ -1,12 +1,6 @@
 defmodule Life do
-  def run do
+  def main(args) do
     board = BoardFromFile.build("seeds/1")
-    Print.board board
-    live(board)
-  end
-
-  def run(seed) do
-    board = BoardFromFile.build(seed)
     Print.board board
     live(board)
   end

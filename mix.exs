@@ -10,7 +10,7 @@ defmodule Boeufvie.Mixfile do
   end
 
   def escript do
-    [main_module: Boeufvie]
+    [main_module: Life]
   end
 
   # Configuration for the OTP application
