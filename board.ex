@@ -4,10 +4,20 @@ defmodule Board do
     Build.create_new({}, 0, size)
   end
 
+  # Returns a new board with every cell updated following the rules.
+  def update(board) do
+    for {row, x} <- Enum.zip(board, 0..(tuple_size(board)-1)) do
+      for {_, y} <- Enum.zip(row, 0..(tuple_size(row)-1)) do
+        Rules.new_cell_state(cell(board, {x, y}), adj_cells(board, {x, y}))
+      end
+    end
+  end
+
   # Returns the value of the passed cell.
   def cell(board, {x, y}) do
     elem(elem(board, x), y)
   end
+
 
   # Returns list of the values of surounding cells.
   def adj_cells(board, {x, y}) do
