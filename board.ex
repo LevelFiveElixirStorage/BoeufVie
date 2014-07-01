@@ -1,12 +1,15 @@
 # First we need to create a board
 defmodule Board do
+  # Return an empty board of give size
   def new(size, dead_state\\:dead) do
-    Build.create_new({}, 0, size, dead_state)
+    Tuple.duplicate(Tuple.duplicate(dead_state, size), size)
   end
 
-  def populate(size, density, dead_state\\:dead, live_state\\:alive) do
+  # Return a board of given size with each cell having p chance of being
+  # alive
+  def populate(size, p, dead_state\\:dead, live_state\\:alive) do
     map new(size, dead_state), fn(state, _) ->
-      if :random.uniform > density do
+      if :random.uniform > p do
         live_state
       else
         state
@@ -68,16 +71,5 @@ defmodule Board do
   defp map(board, {x, y}, f) when x < tuple_size(board) and y < tuple_size(elem(board, x)) do
     board = set_cell_state(board, {x, y}, f.(cell(board, {x, y}), {x, y}))
     map(board, {x, y+1}, f)
-  end
-end
-
-defmodule Build do
-  def create_new(board, size, goal_size, dead_state) when size < goal_size do
-    board = Tuple.insert_at(board, 0, Tuple.duplicate(dead_state, goal_size))
-    create_new(board, size+1, goal_size, dead_state)
-  end
-
-  def create_new(board, size, goal_size, _) when size >= goal_size do
-    board
   end
 end
