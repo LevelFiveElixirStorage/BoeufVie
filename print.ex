@@ -1,28 +1,29 @@
 #print.ex
 defmodule Print do
   def board(board) do
-    printBoard(board, tuple_size(board))
+    printBoard(board, 0)
   end
 
-  def printBoard(board, n) when n <= 1 do
-    row = elem(board, n - 1)
-    printRow(row, tuple_size(row))
+  def printBoard(board, n) when n >= tuple_size(board) - 1 do
+    row = elem(board, n)
+    printRow(row, 0)
+    IO.write "\n"
   end
 
   def printBoard(board, n) do
-    row = elem(board, n - 1)
-    printRow(row, tuple_size(row))
+    row = elem(board, n)
+    printRow(row, 0)
     IO.write "\n"
-    printBoard(board, n - 1)
+    printBoard(board, n + 1)
   end
 
-  def printRow(row, n) when n <= 1  do
-    IO.write elem(row, n - 1)
+  def printRow(row, n) when n >= tuple_size(row) - 1  do
+    IO.write elem(row, n)
   end
 
   def printRow(row, n) do
-    IO.write elem(row, n - 1)
+    IO.write elem(row, n)
     IO.write " "
-    printRow row, n - 1
+    printRow row, n + 1
   end
 end
