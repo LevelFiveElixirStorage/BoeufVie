@@ -1,29 +1,36 @@
 #print.ex
 defmodule Print do
   def board(board) do
-    printBoard(board, 0)
+    print_board(board, 0)
   end
 
-  def printBoard(board, n) when n >= tuple_size(board) - 1 do
+  defp print_board(board, n) when n >= tuple_size(board) - 1 do
     row = elem(board, n)
-    printRow(row, 0)
+    print_row(row, 0)
+  end
+
+  defp print_board(board, n) do
+    row = elem(board, n)
+    print_row(row, 0)
+    print_board(board, n + 1)
+  end
+
+  defp print_row(row, n) when n >= tuple_size(row) - 1  do
+    print_cell(row, n)
     IO.write "\n"
   end
 
-  def printBoard(board, n) do
-    row = elem(board, n)
-    printRow(row, 0)
-    IO.write "\n"
-    printBoard(board, n + 1)
+  defp print_row(row, n) do
+    print_cell(row, n)
+    print_row row, n + 1
   end
 
-  def printRow(row, n) when n >= tuple_size(row) - 1  do
-    IO.write elem(row, n)
-  end
-
-  def printRow(row, n) do
-    IO.write elem(row, n)
+  defp print_cell(row, n) do
+    state = elem(row, n)
+    cond do
+      state == :dead  -> IO.write "."
+      state == :alive -> IO.write "0"
+    end
     IO.write " "
-    printRow row, n + 1
   end
 end
