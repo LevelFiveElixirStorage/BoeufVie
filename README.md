@@ -3,6 +3,13 @@ BoeufVie
 
 The is the game of life. This is real shit.
 
+## Compile
+
+```
+  mix escriptize # Compiles the project
+  ./boeufvie     # Runs the game of life with default options
+```
+
 ## Rules of Conways Game of Life.
 
 1. Any live cell with fewer than two live neighbours dies
