@@ -1,14 +1,14 @@
 # First we need to create a board
 defmodule Board do
-  board = ()
+  board = {}
 
   def new(size) do
+    Build.createNew(board, 0, goalSize)
   end
 end
 
-def module Build do
-  def createNew(board, curSize, Size) when curSize == prevSize do
-    board
+defmodule Build do
+  def create_new(board, size, goalSize) when size <= goalSize do
+    board = Tuple.insert_at(board, 0, Tupple.duplicate(:dead, goalSize))
   end
-
-  def createNew(board, curSize, prevSize) when
+end
