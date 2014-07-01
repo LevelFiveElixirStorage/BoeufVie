@@ -1,27 +1,17 @@
 # First we need to create a board
 defmodule Board do
-  def new(size) do
-    Build.create_new({}, 0, size)
+  def new(size, dead_state\\:dead) do
+    Build.create_new({}, 0, size, dead_state)
   end
 
-  def map(board, f) do
-    map(board, {0, 0}, f)
-  end
-
-  # When past end of rows return the board
-  defp map(board, {x, y}, f) when x >= tuple_size(board) do
-    board
-  end
-
-  # When past end of column go to next row
-  defp map(board, {x, y}, f) when y >= tuple_size(elem(board, x)) do
-    map(board, {x+1, 0}, f)
-  end
-
-  # Update the cell at this point
-  defp map(board, {x, y}, f) when x < tuple_size(board) and y < tuple_size(elem(board, x)) do
-    board = set_cell_state(board, {x, y}, f.(cell(board, {x, y}), {x, y}))
-    map(board, {x, y+1}, f)
+  def populate(size, density, dead_state\\:dead, live_state\\:alive) do
+    map new(size, dead_state), fn(state, _) ->
+      if :random.uniform > density do
+        live_state
+      else
+        state
+      end
+    end
   end
 
   # Returns a new board with every cell updated following the rules.
@@ -56,36 +46,38 @@ defmodule Board do
     board = Tuple.delete_at(board, row)
     cur_col = Tuple.delete_at(cur_col, col)
     cur_col = Tuple.insert_at(cur_col, col, state)
-    board = Tuple.insert_at(board, row, cur_col)
+
+    Tuple.insert_at(board, row, cur_col)
   end
 
-  def populate(board, density, liveState) do
-    Build.populate(board, density, liveState, 0, 0)
+  def map(board, f) do
+    map(board, {0, 0}, f)
+  end
+
+  # When past end of rows return the board
+  defp map(board, {x, _}, _) when x >= tuple_size(board) do
+    board
+  end
+
+  # When past end of column go to next row
+  defp map(board, {x, y}, f) when y >= tuple_size(elem(board, x)) do
+    map(board, {x+1, 0}, f)
+  end
+
+  # Update the cell at this point
+  defp map(board, {x, y}, f) when x < tuple_size(board) and y < tuple_size(elem(board, x)) do
+    board = set_cell_state(board, {x, y}, f.(cell(board, {x, y}), {x, y}))
+    map(board, {x, y+1}, f)
   end
 end
 
 defmodule Build do
-  def create_new(board, size, goalSize) when size < goalSize do
-    board = Tuple.insert_at(board, 0, Tuple.duplicate(:dead, goalSize))
-    create_new(board, size+1, goalSize)
+  def create_new(board, size, goal_size, dead_state) when size < goal_size do
+    board = Tuple.insert_at(board, 0, Tuple.duplicate(dead_state, goal_size))
+    create_new(board, size+1, goal_size, dead_state)
   end
 
-  def create_new(board, size, goalSize) when size >= goalSize do
+  def create_new(board, size, goal_size, _) when size >= goal_size do
     board
-  end
-
-  def populate(board, density, liveState, curRow, curCol) when curRow >= tuple_size(board) do
-    board
-  end
-
-  def populate(board, density, liveState, curRow, curCol) when curCol >= tuple_size(elem(board, curRow)) do
-    populate(board, density, liveState, curRow+1, 0)
-  end
-
-  def populate(board, density, liveState, curRow, curCol) when curRow < tuple_size(board) and curCol < tuple_size(elem(board, curRow)) do
-    if :random.uniform > density do
-      board = Board.set_cell_state(board, {curRow, curCol}, liveState)
-    end
-    populate(board, density, liveState, curRow, curCol+1)
   end
 end
