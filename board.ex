@@ -22,13 +22,20 @@ defmodule Board do
           cell(board, {x_p, y_p})
         end
   end
+
+  def set_cell_state(board, {row, col}, state) do
+    cur_col = elem(board, row)
+    Tuple.delete_at(board, row)
+    cur_col = Tuple.delete_at(cur_col, col)
+    cur_col = Tuple.insert_at(cur_col, col, state)
+    board = Tuple.insert_at(board, row, cur_col)
+  end
 end
 
 defmodule Build do
   def create_new(board, size, goalSize) when size < goalSize do
     board = Tuple.insert_at(board, 0, Tuple.duplicate(:dead, goalSize))
-    size = size + 1
-    create_new(board, size, goalSize)
+    create_new(board, size+1, goalSize)
   end
 
   def create_new(board, size, goalSize) when size >= goalSize do
