@@ -1,4 +1,4 @@
-#IGNORE COMPILED FILES
-*.beam
-#IGNORE YOUR EDITED FILES
-*.swp
+/_build
+/deps
+erl_crash.dump
+*.ez
